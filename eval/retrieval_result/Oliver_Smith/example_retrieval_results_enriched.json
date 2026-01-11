@@ -1,0 +1,22 @@
+{
+  "Q-0001": {
+    "question": "Right, no dilly-dallying then. Let's start with Zeus. The pressure from him is relentless. He operates on the assumption that if you're not pulling 18-hour days, you're not committed. It's less about strategic guidance and more about dictating impossible deadlines, then expecting miracles.\n\nHow do we even begin to navigate that kind of constant, top-down pressure without burning out entirely? It's impacting everything \u2013 my focus, my ability to delegate, even my personal downtime, what little there is.",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"WORK-RELATED PRESSURES\"",
+        "entity_type": "\"INTEREST/SKILL\"",
+        "content": "\"The user's experience of significant stress from work, specifically related to expectations from their MD and long working hours.\"",
+        "rank": 2,
+        "entity_id": "Travel_Planning_6:S1_01",
+        "matched_session_ids": [
+          "Travel_Planning_6:S1_01",
+          "Travel_Planning_6:S1_02",
+          "Mental_Health_Support_6:S1_01",
+          "Knowledge_Learning_8:S7_02",
+          "Mental_Health_Support_6:S11_01"
+        ]
+      }
+    ]
+  }
+}

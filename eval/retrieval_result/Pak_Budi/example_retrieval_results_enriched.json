@@ -1,0 +1,22 @@
+{
+  "Q-0001": {
+    "question": "AI, I'm a driver. I'm tired every day and my back hurts. What should I do first to feel better?",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"PERSONAL DRIVER OR CHAUFFEUR\"",
+        "entity_type": "\"GOAL/INTENTION\"",
+        "content": "\"A career path where the user can utilize their driving skills in a more personal and stable environment.\"",
+        "rank": 1,
+        "entity_id": "Career_Development_467:S1_01",
+        "matched_session_ids": [
+          "Career_Development_467:S1_01",
+          "Health_Consultation_466:S1_02",
+          "Career_Development_467:S3_01",
+          "Knowledge_Learning_92:S7_01",
+          "Enhanced:S10033"
+        ]
+      }
+    ]
+  }
+}

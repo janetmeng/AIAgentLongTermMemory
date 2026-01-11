@@ -1,0 +1,17 @@
+{
+  "Q-0001": {
+    "question": "Hi. I've settled on the budget. That ₩1,500,000 is really all I have for the month. What do we do next for the study-cation?",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"BUDGET\"",
+        "entity_type": "\"STATISTIC\"",
+        "content": "\"The user has a maximum budget of 1.5 million KRW for their entire month-long study-cation.\"",
+        "rank": 2
+      }
+    ],
+    "id": "Q-0001",
+    "generated_answer": "Great — now that the budget is fixed, we can plan the rest around that constraint. Here’s a concise next-step plan plus a sample budget and options so we can pick what fits you.\n\n1) Decide high-level choices (I can help research once you answer these)\n- Travel vs staycation (do you want to leave your city or stay local?)\n- Private room vs shared dorm (privacy vs cheaper)\n- Must-haves: reliable high-speed Wi‑Fi, desk/workspace, AC/heating, kitchen access\n- Preferred region / cities (coastal, mountains, specific city)\n\n2) Sample monthly budget (total 1,500,000 KRW)\nOption A — Comfortable but frugal\n- Accommodation (long-term Airbnb/guesthouse, private room): 700,000 KRW\n- Food (mix of cooking & eating out): 300,000 KRW\n- Coworking / library membership & coffee: 120,000 KRW\n- Local transport (metro, buses, occasional taxi): 100,000 KRW\n- Activities / leisure: 80,000 KRW\n- Contingency / misc (supplies, SIM, laundry): 200,000 KRW\nTotal = 1,500,000 KRW\n\nOption B — Budget-maximize (cheaper lodging)\n- Accommodation (shared house/hostel or work-exchange): 450,000 KRW\n- Food: 350,000 KRW\n- Coworking or domestic classes: 150,000 KRW\n- Transport: 100,000 KRW\n- Leisure: 100,000 KRW\n- Contingency: 350,000 KRW\nTotal = 1,500,000 KRW\n\n3) Cost-saving ideas\n- Look for monthly discounts on Airbnb/guesthouses (many hosts give lower monthly rates)\n- Cook most meals or choose lodging with kitchen\n- Consider a sharehouse or long-stay hostel for huge savings\n- Swap a few days accommodation for light chores (work-exchange) if you’re open to it\n- Use libraries or free cafes for some work hours instead of paying coworking every day\n\n4) Practical next steps (timeline)\n- Today/48 hrs: pick travel vs stay, decide must-haves and top 2-3 preferred locations\n- Within 5 days: I search and shortlist 5 lodging options that fit budget + Wi‑Fi speeds, and 2 coworking options\n- Within 1 week: book accommodation and any transport; draft your daily/weekly study schedule and measurable goals\n- Pre-departure: pack list, backup battery/ram, local SIM or eSIM, print reservation details\n\n5) How I can help right now\n- Search month-long stays in specific cities within the budget\n- Compare coworking passes and libraries (cost & hours)\n- Build a 4-week study plan tied to your goals\n- Create a packing/checklist and a daily schedule template\n\nQuick questions to proceed:\n1. Travel or staycation?\n2. Any preferred city/region or are you flexible?\n3. Do you need a private room? Minimum internet speed required?\n4. Any dietary or accessibility requirements?\n\nTell me those and I’ll start shortlisting accommodation and make a detailed budget that exactly matches ₩1,500,000.",
+    "evidence_used": "---- idx 1 ----\n\"BUDGET\": \"The user has a maximum budget of 1.5 million KRW for their entire month-long study-cation.\""
+  }
+}

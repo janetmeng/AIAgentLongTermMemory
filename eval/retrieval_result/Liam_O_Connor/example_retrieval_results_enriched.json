@@ -1,0 +1,22 @@
+{
+  "Q-0001": {
+    "question": "G'day. We settled on that clockwise loop for the NZ trip. What's the next step for planning it out?",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"RV TRIP\"",
+        "entity_type": "\"GOAL/INTENTION\"",
+        "content": "\"The user's goal is to plan a 12-day RV trip around the South Island with a clockwise route starting from Christchurch, emphasizing scenery and relaxation.\"",
+        "rank": 4,
+        "entity_id": "Travel_Planning_2:S1_01",
+        "matched_session_ids": [
+          "Travel_Planning_2:S1_01",
+          "Travel_Planning_2:S1_02",
+          "Travel_Planning_2:S2_01",
+          "Travel_Planning_2:S10_01",
+          "Travel_Planning_2:S5_01"
+        ]
+      }
+    ]
+  }
+}

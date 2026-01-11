@@ -1,0 +1,22 @@
+{
+  "Q-0002": {
+    "question": "Hi. I've been looking at the `OrderContext` schema again. The `userSegmentTags` field, as a simple string array, feels too basic. We need something more extensible for future tag values or expiry dates. What's your take on a better structure?",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"ORDERCONTEXT\"",
+        "entity_type": "\"OBJECT\"",
+        "content": "\"The foundational schema that includes details about cart line items, user profile snapshots, and transaction context necessary for processing promotions.\"",
+        "rank": 3,
+        "entity_id": "Code_Architecture_Design_1:S12_01",
+        "matched_session_ids": [
+          "Code_Architecture_Design_1:S12_01",
+          "Code_Architecture_Design_1:S1_01",
+          "Literary_Creation_132:S12_01",
+          "Code_Architecture_Design_1:S4_01",
+          "Code_Architecture_Design_1:S9_01"
+        ]
+      }
+    ]
+  }
+}

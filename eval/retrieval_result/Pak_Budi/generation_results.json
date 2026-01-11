@@ -1,0 +1,17 @@
+{
+  "Q-0001": {
+    "question": "AI, I'm a driver. I'm tired every day and my back hurts. What should I do first to feel better?",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"PERSONAL DRIVER OR CHAUFFEUR\"",
+        "entity_type": "\"GOAL/INTENTION\"",
+        "content": "\"A career path where the user can utilize their driving skills in a more personal and stable environment.\"",
+        "rank": 1
+      }
+    ],
+    "id": "Q-0001",
+    "generated_answer": "Sorry you’re dealing with that — long hours behind the wheel really take a toll. Here’s a short, practical plan you can start today and follow over the next weeks to reduce fatigue and back pain.\n\nImmediate (today, right now)\n- Adjust your seat: upright but slightly reclined (about 100–110°), seat close enough that you don’t overreach the wheel, feet able to fully depress pedals, and the top of the steering wheel at chest level.  \n- Add lumbar support: a small lumbar roll, rolled towel, or a dedicated cushion placed at the natural curve of your lower back.  \n- Take a break: if you’ve been driving more than 45–60 minutes, stop, get out, and walk for 5–10 minutes. Move your hips, ankles and shoulders.  \n- Do 3 simple stretches now (hold each 20–30 sec): standing hamstring stretch, knee-to-chest lying or seated, and a gentle seated spinal twist.  \n- If pain is sharp/very bad: stop driving and get medical attention. For moderate pain, a short course of OTC pain relief (ibuprofen/acetaminophen) can help — check with a pharmacist or doctor first.\n\nDaily plan (this week)\n- Micro-breaks: aim to stop and walk 5–10 minutes every 45–60 minutes of driving.  \n- Stretch routine: 10–15 minutes daily — hip flexor stretch, glute/figure-4 stretch, hamstring stretch, cat–cow or pelvic tilts for low-back mobility.  \n- Strengthening (3× week): core and glute exercises (bridges, bird-dog, planks) to support your spine. Even 10–15 minutes helps.  \n- Sleep: check mattress/pillow support; poor sleep surfaces increase back pain.\n\nTools & ergonomics\n- Lumbar roll or supportive cushion, seat cushion to reduce pressure, and if available use cruise control (safely) to vary posture.  \n- Avoid crossing legs, leaning to one side, or slouching. Alternate tasks if possible to vary posture.\n\nWhen to see a clinician\n- Make an appointment with your GP or a physiotherapist if pain persists beyond 1–2 weeks, worsens, or causes numbness/weakness/radiating pain into the legs. Go to emergency if you have loss of bladder/bowel control or sudden severe weakness — those are red flags.\n\nLonger-term (4–12 weeks)\n- Continue strengthening and stretching — you should see improvement.  \n- Consider a professional ergonomic assessment (occupational therapist or physiotherapist) for your vehicle workstation.  \n- If driving long-term is causing chronic pain, consider career adjustments (for example roles with less continuous driving or the “personal driver/chauffeur” option you’ve thought about) or shorter shifts.\n\nWould you like:\n- a simple 10–15 minute daily stretch & strengthening routine I can write out for you?  \n- reminders to take breaks and do stretches during your shift?  \n- help finding a local physio or ergonomic specialist?\n\nTell me how many hours you drive per day and whether you drive a car, van, or truck — I’ll tailor the plan.",
+    "evidence_used": "---- idx 1 ----\n\"PERSONAL DRIVER OR CHAUFFEUR\": \"A career path where the user can utilize their driving skills in a more personal and stable environment.\""
+  }
+}

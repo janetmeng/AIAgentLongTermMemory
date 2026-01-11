@@ -1,0 +1,22 @@
+{
+  "Q-0001": {
+    "question": "Hi. I've settled on the budget. That \u20a91,500,000 is really all I have for the month. What do we do next for the study-cation?",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"BUDGET\"",
+        "entity_type": "\"STATISTIC\"",
+        "content": "\"The user has a maximum budget of 1.5 million KRW for their entire month-long study-cation.\"",
+        "rank": 2,
+        "entity_id": "Travel_Planning_4:S1_01",
+        "matched_session_ids": [
+          "Travel_Planning_4:S1_01",
+          "Travel_Planning_4:S2_01",
+          "Travel_Planning_4:S2_02",
+          "Travel_Planning_4:S4_01",
+          "Travel_Planning_4:S4_02"
+        ]
+      }
+    ]
+  }
+}

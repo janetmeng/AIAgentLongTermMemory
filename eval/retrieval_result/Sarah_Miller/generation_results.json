@@ -1,0 +1,17 @@
+{
+  "Hi! I've been thinking about writing recently. I plan to write a story about our family and town.": {
+    "question": "Hi! I've been thinking about writing recently. I plan to write a story about our family and town.",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"COMMUNITY MEETING SCENARIO\"",
+        "entity_type": "\"OBJECT\"",
+        "content": "\"A scenario designed for participants to conduct a community meeting during a health emergency and engage with partners while addressing cultural considerations.\"",
+        "rank": 1
+      }
+    ],
+    "id": "Hi! I've been thinking about writing recently. I plan to write a story about our family and town.",
+    "generated_answer": "That’s a wonderful project — stories about family and place can be powerful. I can help at every step. A few quick questions so I can tailor my help:\n\n- Do you want this to be nonfiction (memoir/family history) or fiction inspired by real people/events?\n- Rough length and timeframe: a short story, a series of vignettes, a novella, or a full novel?\n- Any particular tone or theme you have in mind (nostalgic, bittersweet, humorous, political, coming-of-age, etc.)?\n- Are you concerned about privacy or needing to change names/details for family members?\n\nIf you’re not sure yet, here are practical next steps and options I can do with you right away:\n\n1) Decide a form and scope\n- Options: single short story, linked short stories (vignettes), multi-generation saga, oral-history collection, or fictionalized novel.\n- I can sketch a one-page outline for any of these.\n\n2) Brainstorming & research\n- Make a quick list of key people, places, events, and local details you want included.\n- I can generate sensory prompts to help you recall vivid scenes (sights, smells, sounds).\n- If you want historical detail about your town, I can suggest what records to check (newspaper archives, census, local historical society) or help draft interview questions for relatives.\n\n3) Structure & characters\n- I can build character sketches, family tree, and map crucial scenes across a timeline.\n- Suggest narrative structures (linear, nonlinear, multiple POVs, epistolary).\n\n4) Writing tools & routine\n- Quick exercises: a 15-minute freewrite about a single family memory; write a scene focusing only on smells; write a one-paragraph backstory for a character.\n- Set a realistic schedule (e.g., 30 min daily or 2–3 sessions weekly). I can remind you and track progress if you want.\n\n5) Ethics & privacy\n- Tips on changing identifying details, getting consent, and converting sensitive events into fiction safely.\n\nWould you like:\n- A few opening-paragraph examples to pick a voice?\n- A short outline for a possible story structure based on an example family/town setup?\n- A 15-minute writing prompt to get started now?\n\nTell me which you prefer and any details you already have (era, one memorable event, a character you want in the story) and I’ll draft the next piece.",
+    "evidence_used": "---- idx 1 ----\n\"COMMUNITY MEETING SCENARIO\": \"A scenario designed for participants to conduct a community meeting during a health emergency and engage with partners while addressing cultural considerations.\""
+  }
+}

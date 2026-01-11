@@ -1,0 +1,17 @@
+{
+  "Q-0001": {
+    "question": "Okay, so my usual work hours are pretty standard, like 9 AM to 6 PM, but honestly, I often work late, sometimes until 8 or 9 PM, especially during busy periods. Overtime is pretty frequent.\n\nAs for free time, weekdays are tough. Evenings are often taken up by work or I'm just too tired. Weekends are better, but I also like to relax or meet friends. Mornings... I'm not really a morning person for exercise.\n\nRealistically, I think I could probably dedicate about 30-45 minutes maybe 2-3 times a week? I don't want to overcommit and then just give up like I've done before.",
+    "ranked_items": [
+      {
+        "res_type": "entity",
+        "entity_name": "\"EXERCISE FREQUENCY\"",
+        "entity_type": "\"STATISTIC\"",
+        "content": "\"The user plans to engage in structured exercise 3 times per week as part of their fitness regimen.\"",
+        "rank": 1
+      }
+    ],
+    "id": "Q-0001",
+    "generated_answer": "That sounds realistic — thanks for the details. I remember you planned to aim for structured exercise about 3x/week, and given your schedule and energy you want to keep sessions to ~30–45 minutes and avoid overcommitting. That’s a great, sustainable approach.\n\nQuick recommendations and two concrete options you can pick from:\n\n1) Scheduling options (pick what fits your weeks)\n- 3×/week option (target): Tue evening, Thu evening, Saturday (best for consistency).\n- 2×/week conservative: One weekday evening + Saturday. Add a short 15–20 min walk or mobility session midweek if possible.\n- If you work very late some days, keep a short fallback: a 15–20 min HIIT or mobility routine you can do at night so you don’t miss the week entirely.\n\n2) Sample 30–45 minute session templates\n- Full-body strength (35–40 min)\n  - 5 min warm-up (dynamic moves)\n  - 3 circuits × (Squats 8–12, Push-ups or DB press 8–12, Bent-over row 8–12) — rest 60–90s between circuits\n  - Core finisher: Plank 3×30–60s\n  - 5 min cool-down/stretch\n\n- Conditioning/HIIT (20–30 min high intensity + warm-up/cool-down = ~35–40 min)\n  - 5 min warm-up\n  - 20 min intervals (e.g., 40s on/20s off × 5 rounds of different movements: burpees, jump squats, mountain climbers, kettlebell swings)\n  - 5–10 min cool-down/stretch\n\n- Mobility + light strength (30–40 min) — good for recovery evenings\n  - 5 min warm-up\n  - 3 rounds of lunges, single-leg RDL, band rows, shoulder drills (moderate intensity)\n  - 10–15 min focused mobility/yoga-style stretches\n\n3) Start-up plan\n- Weeks 1–3: aim for 2 sessions/week to build habit (plus optional short mobility walk).\n- Weeks 4–8: push to 3 sessions/week if you feel good, gradually increasing load or adding one extra set.\n- Track sessions and energy — if you notice fatigue, swap a strength day for mobility.\n\n4) Quick tips\n- Prioritize one consistent slot (e.g., Saturday + one weekday) so it becomes routine.\n- Keep a short “night fallback” (15–20 min) for very late days.\n- If you have equipment preferences (gym, dumbbells, bands) or any injuries, tell me so I can tailor workouts.\n- I can set up a 4–8 week plan with progression, or give you ready-to-use workouts each week.\n\nWhich schedule sounds best — the 2×/week starter or the 3×/week target? And do you prefer home workouts or gym-based ones (any equipment)?",
+    "evidence_used": "---- idx 1 ----\n\"EXERCISE FREQUENCY\": \"The user plans to engage in structured exercise 3 times per week as part of their fitness regimen.\""
+  }
+}
