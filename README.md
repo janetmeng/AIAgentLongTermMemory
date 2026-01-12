@@ -259,6 +259,7 @@ If you use RealMem in your research, please cite our work:
       title={RealMem: Benchmarking LLMs in Real-World Memory-Driven Interaction}, 
       author={RealMem Team},
       year={2026},
+      note={Our paper will be released on arXiv soon. Stay tuned!},
       howpublished={\url{https://github.com/your-org/realmem}},
 }
 ```
