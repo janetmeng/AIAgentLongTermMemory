@@ -5,6 +5,7 @@
   </h1>
   
   <p style="margin: 20px 0;">
+    <a href="https://arxiv.org/abs/2601.06966"><img src="https://img.shields.io/badge/arXiv-2601.06966-B31B1B.svg?style=flat-square&logo=arxiv&logoColor=white" /></a>
     <a href="#"><img src="https://img.shields.io/badge/Python-3.8+-blue.svg?style=flat-square&logo=python&logoColor=white" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" /></a>
     <a href="https://quantaalpha.github.io/"><img src="https://img.shields.io/badge/Team-QuantaAlpha-00A98F.svg?style=flat-square&logo=opensourceinitiative&logoColor=white" /></a>
@@ -13,6 +14,7 @@
 
 ## 📰 News
 
+- **2026.01.11** 🎉 We released the paper [**RealMem**](http://arxiv.org/abs/2601.06966) on arXiv.
 - **2026.01.11** 🎉 We open-sourced **RealMem** — a robust multi-agent framework designed to simulate realistic user-assistant interactions with sophisticated memory management.
 
 ## 🧭 Motivation and Goal
