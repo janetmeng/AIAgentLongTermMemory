@@ -255,12 +255,14 @@ We welcome community contributions! Please feel free to open issues or submit pu
 If you use RealMem in your research, please cite our work:
 
 ```bibtex
-@misc{realmem2026,
+@misc{bian2026realmembenchmarkingllmsrealworld,
       title={RealMem: Benchmarking LLMs in Real-World Memory-Driven Interaction}, 
-      author={RealMem Team},
+      author={Haonan Bian and Zhiyuan Yao and Sen Hu and Zishan Xu and Shaolei Zhang and Yifu Guo and Ziliang Yang and Xueran Han and Huacan Wang and Ronghao Chen},
       year={2026},
-      note={Our paper will be released on arXiv soon. Stay tuned!},
-      howpublished={\url{https://github.com/your-org/realmem}},
+      eprint={2601.06966},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2601.06966}, 
 }
 ```
 
