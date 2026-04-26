@@ -25,8 +25,8 @@ import random
 import os
 
 load_dotenv()
-api_key = os.getenv('OPENAI_API_KEY')
-base_url = os.getenv('BASE_URL')
+api_key = os.getenv('DUKE_LITELLM_API_KEY')
+base_url = os.getenv('BASE_URL', 'https://litellm.oit.duke.edu')
 
 
 # Global variables to store persona and topic data
@@ -52,24 +52,28 @@ def parse_arguments():
                        help="Number of project blueprints to generate for each person (default: 1)")
 
     # Model parameters
-    parser.add_argument("--blueprint-model", type=str, default="gemini-2.5-pro",
-                       help="LLM model for project blueprint generation (default: gemini-2.5-pro)")
-    parser.add_argument("--event-model", type=str, default="gemini-2.5-pro",
-                       help="LLM model for event generation (default: gemini-2.5-pro)")
-    parser.add_argument("--summary-model", type=str, default="gemini-2.5-pro",
-                       help="LLM model for session summary generation (default: gemini-2.5-pro)")
-    parser.add_argument("--dialogue-model", type=str, default="gemini-2.5-flash",
-                       help="LLM model for dialogue generation (default: gemini-2.5-flash)")
-    parser.add_argument("--evaluation-model", type=str, default="gemini-2.5-flash-lite",
-                       help="LLM model for evaluation (default: gemini-2.5-flash-lite)")
-    parser.add_argument("--memory-model", type=str, default="gemini-2.5-flash",
-                       help="LLM model for memory management (default: gemini-2.5-flash)")
-    parser.add_argument("--memory-retrieve-model", type=str, default="gemini-2.5-flash",
-                       help="LLM model for memory retrieval (default: gemini-2.5-flash)")
-    parser.add_argument("--dedup-model", type=str, default="gemini-2.5-flash",
-                       help="LLM model for deduplication (default: gemini-2.5-flash)")
-    parser.add_argument("--semantic-schedule-model", type=str, default="gemini-2.5-pro",
-                       help="LLM model for semantic schedule processing (default: gpt-4o-mini)")
+    parser.add_argument("--blueprint-model", type=str, default="gpt-5-mini",
+                       help="LLM model for project blueprint generation (default: gpt-5-mini)")
+    parser.add_argument("--event-model", type=str, default="gpt-5-mini",
+                       help="LLM model for event generation (default: gpt-5-mini)")
+    parser.add_argument("--summary-model", type=str, default="gpt-5-mini",
+                       help="LLM model for session summary generation (default: gpt-5-mini)")
+    parser.add_argument("--dialogue-model", type=str, default="gpt-5-mini",
+                       help="LLM model for dialogue generation (default: gpt-5-mini)")
+    parser.add_argument("--evaluation-model", type=str, default="gpt-5-mini",
+                       help="LLM model for evaluation (default: gpt-5-mini)")
+    parser.add_argument("--memory-model", type=str, default="gpt-5-mini",
+                       help="LLM model for memory management (default: gpt-5-mini)")
+    parser.add_argument("--memory-retrieve-model", type=str, default="gpt-5-mini",
+                       help="LLM model for memory retrieval (default: gpt-5-mini)")
+    parser.add_argument("--dedup-model", type=str, default="gpt-5-mini",
+                       help="LLM model for deduplication (default: gpt-5-mini)")
+    parser.add_argument("--semantic-schedule-model", type=str, default="gpt-5-mini",
+                       help="LLM model for semantic schedule processing (default: gpt-5-mini)")
+    parser.add_argument("--assistant-model", type=str, default="gpt-5-mini",
+                       help="LLM model for the assistant agent responses (default: gpt-5-mini)")
+    parser.add_argument("--eval-mode", action="store_true",
+                       help="Use EvalAssistantAgent: strips oracle inputs (memory, session goal, schedule) so the assistant only sees the current conversation history and time")
 
     # Processing parameters
     parser.add_argument("--max-turns", type=int, default=24,
@@ -862,7 +866,7 @@ def generate_project_blueprint(person_data: Dict[str, Any], project_attributes: 
     try:
         # Use provided model or default
         if model is None:
-            model = "gemini-2.5-pro-thinking-*"
+            model = "gpt-5-mini"
 
         # Initialize LLM client
         llm_client = create_client(api_key=api_key, base_url=base_url, model=model)
@@ -982,7 +986,7 @@ def generate_session_summaries(person_data: Dict[str, Any], blueprint: Dict[str,
     try:
         # Use provided model or default
         if model is None:
-            model = "gemini-2.5-pro-thinking-*"
+            model = "gpt-5-mini"
 
         # initializeLLMTranslated comment
         llm_client = create_client(api_key=api_key, base_url=base_url, model=model)
@@ -1023,6 +1027,9 @@ def generate_session_summaries(person_data: Dict[str, Any], blueprint: Dict[str,
                     # Translated commentstructure，Translated commentsessions
                     if 'sessions' in processor_output and isinstance(processor_output['sessions'], list):
                         session_summary = processor_output['sessions']
+                    elif 'session_id' in processor_output:
+                        # Single session object returned, wrap in list
+                        session_summary = [processor_output]
                     else:
                         session_summary = []
                 else:
@@ -1080,9 +1087,9 @@ def generate_session_summaries(person_data: Dict[str, Any], blueprint: Dict[str,
 
 def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], events_data: Dict[str, Any], summary_data: Dict[str, Any],
                        dialogue_model: str = None, evaluation_model: str = None, memory_model: str = None,
-                       memory_retrieve_model: str = None, dedup_model: str = None, semantic_schedule_model: str = None,
+                       memory_retrieve_model: str = None, dedup_model: str = None, semantic_schedule_model: str = None, assistant_model: str = None,
                        max_turns: int = 12, sessions_to_regenerate=None, max_retries: int = 2, show_progress: bool = True,
-                       current_time: str = "", current_plan_items: List[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+                       current_time: str = "", current_plan_items: List[Dict[str, Any]] = None, eval_mode: bool = False) -> Optional[Dict[str, Any]]:
     """
     forsessionsummarygeneratedialogue，functionisdialoguegenerate，memoryforfunction
     useperson-basedConversationControlleritemsAgentcompletedialoguetask
@@ -1097,32 +1104,46 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
     try:
         # Use provided models or defaults
         if dialogue_model is None:
-            dialogue_model = "gemini-2.5-pro-thinking-*"
+            dialogue_model = "gpt-5-mini"
         if evaluation_model is None:
-            evaluation_model = "gpt-4o-mini"
+            evaluation_model = "gpt-5-mini"
         if memory_model is None:
-            memory_model = "gpt-4o-mini"
+            memory_model = "gpt-5-mini"
         if memory_retrieve_model is None:
-            memory_retrieve_model = "gemini-2.5-pro-thinking-*"
+            memory_retrieve_model = "gpt-5-mini"
         if dedup_model is None:
-            dedup_model = "gemini-2.5-flash-nothinking"
+            dedup_model = "gpt-5-mini"
         if semantic_schedule_model is None:
-            semantic_schedule_model = "gpt-4o-mini"
+            semantic_schedule_model = "gpt-5-mini"
+        if assistant_model is None:
+            assistant_model = "gpt-4.1"
 
         # useTranslated commentMultiAgentDialogueProcessorTranslated commentrowTranslated commentdialoguegenerate
-        dialogue_client = create_client(api_key=api_key, base_url=base_url, model=dialogue_model)
-        evaluation_client = create_client(api_key=api_key, base_url=base_url, model=evaluation_model)
-        memory_client = create_client(api_key=api_key, base_url=base_url, model=memory_model, reasoning_effort="none")
-        dedup_client = create_client(api_key=api_key, base_url=base_url, model=dedup_model, reasoning_effort="none")
-        memory_retrieve_client = create_client(api_key=api_key, base_url=base_url, model=memory_retrieve_model, reasoning_effort="none")
-        semantic_schedule_client = create_client(api_key=api_key, base_url=base_url, model=semantic_schedule_model, reasoning_effort="none")
 
+        # dialogue_client is used by MultiAgentDialogueProcessor, generates the dialogue
+        dialogue_client = create_client(api_key=api_key, base_url=base_url, model=dialogue_model)
+        # evaluates goal completion
+        evaluation_client = create_client(api_key=api_key, base_url=base_url, model=evaluation_model)
+        # extract memories from dialogue
+        memory_client = create_client(api_key=api_key, base_url=base_url, model=memory_model)
+        # deduplicates memory points
+        dedup_client = create_client(api_key=api_key, base_url=base_url, model=dedup_model)
+        # retrieves relevant memories
+        memory_retrieve_client = create_client(api_key=api_key, base_url=base_url, model=memory_retrieve_model)
+        # Update schedule plan using SemanticScheduleAgent
+        semantic_schedule_client = create_client(api_key=api_key, base_url=base_url, model=semantic_schedule_model)
+        # Assistant agent responses (the model being evaluated)
+        assistant_client = create_client(api_key=api_key, base_url=base_url, model=assistant_model)
+
+        #  Instantiates a MultiAgentDialogueProcessor and attaches a ConversationController that coordinates all the agents/clients above.
         processor = MultiAgentDialogueProcessor(dialogue_client)
 
         # configdialoguecontrolTranslated comment - Translated commentinitializeparameterTranslated comment
         if hasattr(processor, 'llm_client'):
             # createnewdialoguecontrolTranslated comment，Translated commentallTranslated commentneedTranslated comment
             from pipeline.multi_agent_dialogue_processor import ConversationController
+
+            #    """Conversation Controller - Coordinates various agents"""
             processor.conversation_controller = ConversationController(
                 dialogue_client=dialogue_client,
                 evaluation_client=evaluation_client,
@@ -1130,10 +1151,13 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
                 memory_retrieve_client=memory_retrieve_client,
                 dedup_client=dedup_client,
                 semantic_schedule_client=semantic_schedule_client,  # [NEW] addTranslated comment
-                project_attributes_schema=blueprint.get('project_attributes_schema', '')
+                assistant_client=assistant_client,
+                project_attributes_schema=blueprint.get('project_attributes_schema', ''),
+                eval_mode=eval_mode
             )
 
         # Translated commenteventdata
+        # extract all events data!
         event_list = []
 
         if 'events' in events_data and isinstance(events_data['events'], list):
@@ -1166,6 +1190,8 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
         else:
             print(f"    🎯 Processing {len(all_sessions)} sessions for {person_name}")
 
+
+        # build output directory, save at output/<person_name>/<project_identifier>/dialogues/.
         all_dialogues = []
 
         # Generate project identifier for directory structure
@@ -1208,17 +1234,22 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
         else:
             progress_bar = all_sessions
 
+            # LOOP THROUGH EACH SESSION! FOR EACH SESSION...
             for session in progress_bar:
                 session_id = session.get('session_id', f'S{len(processed_sessions)+1:03d}')
 
+
+                # GATHER CONTEXT... ALL SESSION SUMMARIES
                 # getcurrenteventallsessionsummary
                 current_event_session_summary_list = get_event_session_summaries(
                     session.get('event_id', 0), all_sessions
                 )
 
+                #  HISTORY DIALOGUES
                 # getTranslated commentdialogue - usenewTranslated commentdialoguegetlogic
                 history_dialogue = get_history_dialogue(processed_sessions, str(output_dir), session_id)
 
+                # PERSON'S CURRENT MEMORY STATE
                 # getcurrentpersonmemorydata（useTranslated commentmemory）
                 current_person_memory = get_person_memory(person_name)
 
@@ -1255,6 +1286,8 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
                         except:
                             return date_str
 
+
+                # BUILDS AN INPUT DATA: PERSON PROFILE, FULL EVENT LOG...
                 # buildinputdata - useMultiAgentDialogueProcessorTranslated commentformat，addtimeandTranslated comment
                 input_data = {
                     "user_input_profile": person_data,
@@ -1277,6 +1310,12 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
                 #print(json.dumps(input_data, ensure_ascii=False, indent=2))
                 #print("-----------------------------------------------------------------------------------------------------------------")
 
+                # PROCESS SESSION:
+                # 1. EXTRACT MEMORY: extract_session_memory() on the generated dialogue to get new memory points.
+                # 2. DEDUPLICATE MEMORY: COMBINE RETRIEVED MEMORY W/ OLD MEMORIES, RUN  deduplicate_memory_points() TO MERGE OVERLAPS
+                # 3. UPDATE GLOBAL MEMORY: MERGE THE DEDUPLICATED RESULTS BACK INTO GLOBAL MEMORY
+                # 4. UPDATE PLAN ITEMS for subsequent sessions
+                # 5. SAVE DIALOGUE: WRITE THE SESSION'S DIALOGUE DATA (TURNS, EVALUATION, MEMORY POINTS, METADATA) TO <session_id>.json
                 # Processing session - useMultiAgentDialogueProcessorTranslated commentprocess，addretryTranslated comment
                 last_error = None
                 for attempt in range(max_retries + 1):  # Translated commentattempt + max_retriestimesretry
@@ -1506,6 +1545,10 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
         # descriptionprojectmemoryTranslated commentineachitemssessioninTranslated commentsave，noneedTranslated commentsave
         print(f"📝 projectmemoryineachitemssessionaftersave")
 
+
+        # FINAL SAVE AND RETURN: 
+        # 1. Saves the final person memory to disk
+        # 2. Saves a combined _all_dialogues_summary.json file
         if all_dialogues:
             # getTranslated commentpersonmemorydata
             final_person_memory = get_person_memory(person_name)
@@ -1570,6 +1613,9 @@ def generate_dialogues(person_data: Dict[str, Any], blueprint: Dict[str, Any], e
         return None
 
 
+# Handles multiple projects for one person. 
+# Builds a queue that interleaves sessions across projects with a topic cooldown system (5 sessions between same-topic projects). 
+# Persists queue state to interleaved_dialogue_queue_state.json
 def generate_dialogues_interleaved(person_data: Dict[str, Any], project_dialogue_data: Dict[str, Any], args=None) -> Dict[str, Any]:
     """
     projectdialoguegenerate
@@ -1947,11 +1993,13 @@ def generate_dialogues_interleaved(person_data: Dict[str, Any], project_dialogue
                     memory_retrieve_model=args.memory_retrieve_model if args else None,
                     dedup_model=args.dedup_model if args else None,
                     semantic_schedule_model=getattr(args, 'semantic_schedule_model', None) if args else None,
+                    assistant_model=getattr(args, 'assistant_model', None) if args else None,
                     max_turns=args.max_turns if args else 16,
                     sessions_to_regenerate=[session.get("session_id")],
                     max_retries=getattr(args, 'max_retries', 2) if args else 2,
                     show_progress=False,  # Translated commentinsideTranslated commententry，Translated commentwithoutsideTranslated commententryTranslated comment
-                    current_time=session_date  # [NEW] Translated commentsessiondate
+                    current_time=session_date,  # [NEW] Translated commentsessiondate
+                    eval_mode=getattr(args, 'eval_mode', False) if args else False
                 )
 
                 if dialogue_result:
@@ -2299,10 +2347,10 @@ def generate_events(person_data: Dict[str, Any], blueprint: Dict[str, Any], proj
     try:
         # Use provided model or default
         if model is None:
-            model = "gemini-2.5-pro-thinking-*"
+            model = "gpt-5-mini"
 
         # initializeLLMTranslated comment
-        llm_client = create_client(api_key=api_key, base_url=base_url, model=model, 
+        llm_client = create_client(api_key=api_key, base_url=base_url, model=model,
         #reasoning_effort="disable"
         )
         print("✅ Event LLM client initialized")
@@ -2470,6 +2518,11 @@ def check_person_progress(person_name: str) -> List[Dict[str, Any]]:
 
     return results
 
+# check person progress for each task
+# process blueprint stage() --> calls generate_project_blueprint()
+# process events stage() --> calls generate_events()
+# process summaries stage() --> calls generate_session_summaries()
+# process dialogues stage() --> calls generte_dialogues_interleaving() which calls generate_dialogues() per session
 
 def smart_full_process(person, projects_to_generate=1, args=None):
     """Translated docstring"""
@@ -2520,14 +2573,17 @@ def smart_full_process(person, projects_to_generate=1, args=None):
 
         elif status in ["need_blueprint", "blueprint_incomplete", "blueprint_corrupted"]:
             print("🔄 fromblueprintsectionbegin")
+            # resume from a specific stage
             process_blueprint_stage(person_data, task, args)
 
         elif status in ["need_events", "events_incomplete", "events_corrupted"]:
             print("🔄 fromeventssectionbegin")
+            # resume from a specific stage
             process_events_stage(person_data, task, args)
 
         elif status in ["need_summaries", "summaries_incomplete", "summaries_corrupted"]:
             print("🔄 fromsummariessectionbegin")
+            # resume from a specific stage
             process_summaries_stage(person_data, task, args)
     
     # beforeTranslated commentdataTranslated comment - Translated commentdialoguegenerateproject
@@ -2566,7 +2622,7 @@ def smart_full_process(person, projects_to_generate=1, args=None):
 
     print(f"\n✅ allprojectprocesscomplete！")
 
-
+# runs all 4 stages sequentially for a new project
 def process_project_from_start(person_data: Dict[str, Any], task: Dict[str, Any], args=None):
     """Translated docstring"""
     person_name = person_data.get('name', 'unknown_person')
@@ -2643,10 +2699,12 @@ def process_project_from_start(person_data: Dict[str, Any], task: Dict[str, Any]
                                       memory_retrieve_model=args.memory_retrieve_model if args else None,
                                       dedup_model=args.dedup_model if args else None,
                                       semantic_schedule_model=getattr(args, 'semantic_schedule_model', None) if args else None,
+                                      assistant_model=getattr(args, 'assistant_model', None) if args else None,
                                       max_turns=args.max_turns if args else 12,
                                       max_retries=getattr(args, 'max_retries', 2) if args else 2,
                                       current_time=current_time,
-                                      current_plan_items=current_plan_items)
+                                      current_plan_items=current_plan_items,
+                                      eval_mode=getattr(args, 'eval_mode', False) if args else False)
 
     if not dialogue_data:
         print(f"    ❌ Failed to generate dialogues")

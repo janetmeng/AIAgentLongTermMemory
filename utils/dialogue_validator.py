@@ -96,7 +96,7 @@ Output ONLY a JSON object. Do not output markdown blocks.
                             {"role": "system", "content": "You are a precise JSON evaluator. Always return valid JSON only."},
                             {"role": "user", "content": prompt}
                         ],
-                        temperature=0.3,
+                        temperature=1.0,
                         response_format={"type": "json_object"}
                     )
 

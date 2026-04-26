@@ -13,7 +13,7 @@ if PROJECT_ROOT not in sys.path:
 
 def dcg(relevances, k):
     """Discounted Cumulative Gain at k."""
-    relevances = np.asfarray(relevances)[:k]
+    relevances = np.asarray(relevances, dtype=float)[:k]
     if relevances.size:
         return relevances[0] + np.sum(relevances[1:] / np.log2(np.arange(2, relevances.size + 1)))
     return 0.
@@ -153,7 +153,10 @@ def main(args):
 
     # In new format, retrieval_results is { query_text: { "question": ..., "ranked_items": [...] } }
     
-    for query_text, result_obj in tqdm(retrieval_results.items(), desc="Evaluating"):
+    for query_id, result_obj in tqdm(retrieval_results.items(), desc="Evaluating"):
+        # Get the actual question text from result_obj
+        query_text = result_obj.get('question', query_id)
+
         # Match query text to ground truth
         # Try exact match
         gt_key = None
@@ -175,10 +178,28 @@ def main(args):
         
         ranked_retrieved_ids = []
         for item in ranked_items:
-            if isinstance(item, dict) and item.get('res_type') == 'chunk':
-                rid = item.get('chunk_id')
-                if rid:
-                    ranked_retrieved_ids.append(rid)
+            if isinstance(item, dict):
+                res_type = item.get('res_type')
+                # Support both 'chunk' and 'entity' types
+                if res_type == 'chunk':
+                    rid = item.get('chunk_id')
+                    if rid:
+                        ranked_retrieved_ids.append(rid)
+                elif res_type == 'entity':
+                    # Use matched_session_ids (from enrichment) to expand entity to sessions
+                    matched_sids = item.get('matched_session_ids', [])
+                    if matched_sids:
+                        for sid in matched_sids:
+                            if sid not in ranked_retrieved_ids:
+                                ranked_retrieved_ids.append(sid)
+                    else:
+                        rid = item.get('entity_id')
+                        if rid:
+                            ranked_retrieved_ids.append(rid)
+                else:
+                    rid = item.get('chunk_id') or item.get('entity_id')
+                    if rid:
+                        ranked_retrieved_ids.append(rid)
         
         # Convert to indices for evaluation function
         rankings = []
@@ -241,8 +262,12 @@ def process_retrieval_results_metrics(args):
     for item in os.listdir(retrieval_result_dir):
         item_path = os.path.join(retrieval_result_dir, item)
         if os.path.isdir(item_path):
+            # Prefer enriched file (with session IDs) over original
+            enriched_file = os.path.join(item_path, 'example_retrieval_results_enriched.json')
             retrieval_file = os.path.join(item_path, 'example_retrieval_results.json')
-            if os.path.exists(retrieval_file):
+            if os.path.exists(enriched_file):
+                subdirs.append((item, enriched_file))
+            elif os.path.exists(retrieval_file):
                 subdirs.append((item, retrieval_file))
 
     subdirs.sort()

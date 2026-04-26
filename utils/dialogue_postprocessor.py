@@ -1398,7 +1398,7 @@ def main():
     return 0
 
 
-def validate_and_fix_dialogue(dialogue: Dict[str, Any]) -> tuple[int, int]:
+def validate_and_fix_dialogue(dialogue: Dict[str, Any]) -> Tuple[int, int]:
     """
     Validate and fix is_query flags in a single dialogue
 

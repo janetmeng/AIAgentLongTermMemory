@@ -114,7 +114,7 @@ class BaseProcessor(ABC):
         return self.checkpoint_manager.clear_checkpoint()
 
     def safe_llm_generate(self, prompt: str, system_prompt: Optional[str] = None,
-                         temperature: float = 0.7, max_tokens: int = 20000) -> ProcessorResult:
+                         temperature: float = 1.0, max_tokens: int = 20000) -> ProcessorResult:
         """
         Safe LLM generation call
 

@@ -49,7 +49,7 @@ class ProjectOutlineProcessor(BaseProcessor):
         # Call LLM
         llm_result = self.safe_llm_generate(
             prompt=prompt,
-            temperature=0.3,  # Lower temperature to ensure structured output
+            temperature=1.0,  # Lower temperature to ensure structured output
             max_tokens=128000
         )
 

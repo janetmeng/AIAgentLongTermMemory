@@ -15,10 +15,13 @@ from mem0.configs.base import MemoryConfig
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# Load .env file from project root
+from dotenv import load_dotenv
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
+
 # Configure API key and base_url
-# 从环境变量读取，避免硬编码敏感信息
-API_KEY = os.getenv("OPENAI_API_KEY", "")
-BASE_URL = os.getenv("OPENAI_BASE_URL", "")
+API_KEY = os.getenv("DUKE_LITELLM_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+BASE_URL = os.getenv("LITELLM_BASE_URL", os.getenv("OPENAI_BASE_URL", "https://litellm.oit.duke.edu"))
 
 
 class EvalMem0:
@@ -27,6 +30,7 @@ class EvalMem0:
     def __init__(self, retrieve_k: int = 10):
         self.retrieve_k = retrieve_k
 
+        print(f"DEBUG API_KEY={repr(API_KEY)}, BASE_URL={repr(BASE_URL)}")                        
         # Set environment variables
         os.environ["OPENAI_API_KEY"] = API_KEY
         os.environ["OPENAI_BASE_URL"] = BASE_URL
@@ -36,7 +40,7 @@ class EvalMem0:
             llm={
                 "provider": "openai",
                 "config": {
-                    "model": "gpt-4o-mini",
+                    "model": "gpt-5-mini",
                     "api_key": API_KEY,
                     "openai_base_url": BASE_URL,
                 }
@@ -145,10 +149,7 @@ class EvalMem0:
         # Save to mapping
         self.session_dialogue_map[session_identifier] = dialogue_turns
         
-        # 1. Add session memory
-        self.add_session_memory(dialogue_turns, session_identifier)
-        
-        # 2. Process all dialogue turns with is_query=true
+        # 1. Process all dialogue turns with is_query=true
         for turn_idx, turn in enumerate(dialogue_turns):
             if turn.get('is_query', False):
                 question = turn.get('content', '').strip()
@@ -224,6 +225,9 @@ class EvalMem0:
                 }
                 
                 logger.info(f"Retrieved {len(memory_details)} relevant memory fragments")
+        
+        # 2. Add session memory after responding to queries
+        self.add_session_memory(dialogue_turns, session_identifier)
 
     def run(self, data_file: str, output_dir: str = "simple_eval_results"):
         """

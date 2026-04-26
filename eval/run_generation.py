@@ -1,9 +1,13 @@
 import argparse
 import json
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from openai import OpenAI
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
 def load_data(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -51,7 +55,7 @@ def process_item(qid, item_data, args, client):
         ans_completion = client.chat.completions.create(
             model=args.model_name,
             messages=[{"role": "user", "content": ans_prompt}],
-            temperature=0.7 
+            temperature=1.0
         )
         gen_answer = ans_completion.choices[0].message.content
     except Exception as e:
@@ -75,7 +79,7 @@ def parse_args():
     parser.add_argument('--api_key', default=None, help="API Key for the client.")
     parser.add_argument('--evidence_type', default='chunk', help="Type of evidence to use (default: chunk).")
     parser.add_argument('--top_k', type=int, default=5, help="Number of top evidence items to use.")
-    parser.add_argument('--max_workers', type=int, default=10, help="Number of concurrent workers (default: 10).")
+    parser.add_argument('--max_workers', type=int, default=4, help="Number of concurrent workers (default: 10).")
     
     # Batch processing args
     parser.add_argument('--run_all', action='store_true', help='Run generation for all datasets found.')
@@ -87,7 +91,7 @@ def parse_args():
 
 def run_generation(args):
     # Setup client
-    api_key = args.api_key or os.environ.get("OPENAI_API_KEY") or "EMPTY"
+    api_key = args.api_key or os.environ.get("DUKE_LITELLM_API_KEY") or "EMPTY"
     
     print(f"Initializing OpenAI client with model={args.model_name}, base_url={args.base_url}")
     # OpenAI client is thread-safe

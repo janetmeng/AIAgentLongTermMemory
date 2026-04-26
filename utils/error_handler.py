@@ -213,45 +213,51 @@ class LLMErrorHandler:
                     pass
 
             # Try finding standalone JSON (including objects and arrays)
-            # Use smarter method to find complete JSON structure
-            for start_char, end_char in [('{', '}'), ('[', ']')]:
-                start_idx = response.find(start_char)
-                if start_idx != -1:
-                    # Use bracket matching to find complete JSON structure
-                    brace_count = 0
-                    in_string = False
-                    escape_next = False
+            # IMPORTANT: scan in textual order so a top-level JSON array like
+            # `[ {...}, {...} ]` is extracted as the whole array instead of the
+            # first inner object.
+            candidate_starts = [i for i, ch in enumerate(response) if ch in ('{', '[')]
 
-                    for i, char in enumerate(response[start_idx:], start_idx):
-                        if escape_next:
-                            escape_next = False
-                            continue
+            for start_idx in candidate_starts:
+                start_char = response[start_idx]
+                end_char = '}' if start_char == '{' else ']'
 
-                        if char == '\\' and in_string:
-                            escape_next = True
-                            continue
+                # Use bracket matching to find complete JSON structure
+                brace_count = 0
+                in_string = False
+                escape_next = False
 
-                        if char == '"' and not escape_next:
-                            in_string = not in_string
-                            continue
+                for i, char in enumerate(response[start_idx:], start_idx):
+                    if escape_next:
+                        escape_next = False
+                        continue
 
-                        if not in_string:
-                            if char == start_char:
-                                brace_count += 1
-                            elif char == end_char:
-                                brace_count -= 1
-                                if brace_count == 0:
-                                    # Found complete JSON structure
-                                    json_str = response[start_idx:i+1]
-                                    try:
-                                        parsed_json = json.loads(json_str)
-                                        return ProcessingResult(
-                                            success=True,
-                                            result=parsed_json
-                                        )
-                                    except json.JSONDecodeError:
-                                        # If parsing fails, continue searching for next possible JSON
-                                        break
+                    if char == '\\' and in_string:
+                        escape_next = True
+                        continue
+
+                    if char == '"' and not escape_next:
+                        in_string = not in_string
+                        continue
+
+                    if not in_string:
+                        if char == start_char:
+                            brace_count += 1
+                        elif char == end_char:
+                            brace_count -= 1
+                            if brace_count == 0:
+                                # Found complete JSON structure
+                                json_str = response[start_idx:i+1]
+                                try:
+                                    parsed_json = json.loads(json_str)
+                                    return ProcessingResult(
+                                        success=True,
+                                        result=parsed_json
+                                    )
+                                except json.JSONDecodeError:
+                                    # If parsing fails, continue searching for the
+                                    # next possible JSON start token.
+                                    break
   
             return ProcessingResult(
                 success=False,

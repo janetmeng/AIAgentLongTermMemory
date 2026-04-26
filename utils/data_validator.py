@@ -8,7 +8,7 @@ Using Pydantic for data validation and error reporting
 import json
 import os
 import re
-from typing import List, Dict, Any, Optional, Union
+from typing import List, Dict, Any, Optional, Tuple, Union
 from pydantic import BaseModel, Field, validator, ValidationError
 from pydantic.json import pydantic_encoder
 
@@ -142,7 +142,7 @@ class ValidationErrorReport:
     """Validation error reporter"""
 
     @staticmethod
-    def validate_memory_point(data: Dict[str, Any]) -> tuple[bool, Optional[MemoryPoint], str]:
+    def validate_memory_point(data: Dict[str, Any]) -> Tuple[bool, Optional[MemoryPoint], str]:
         """
         Validate memory point data
 
@@ -163,7 +163,7 @@ class ValidationErrorReport:
             return False, None, error_msg
 
     @staticmethod
-    def validate_session_summary(data: Dict[str, Any]) -> tuple[bool, Optional[SessionSummary], str]:
+    def validate_session_summary(data: Dict[str, Any]) -> Tuple[bool, Optional[SessionSummary], str]:
         """
         Validate session summary data
 
@@ -184,7 +184,7 @@ class ValidationErrorReport:
             return False, None, error_msg
 
     @staticmethod
-    def validate_dialogue_data(data: Dict[str, Any]) -> tuple[bool, Optional[DialogueData], str]:
+    def validate_dialogue_data(data: Dict[str, Any]) -> Tuple[bool, Optional[DialogueData], str]:
         """
         Validate dialogue data
 
@@ -295,17 +295,17 @@ class ValidationErrorReport:
 
 
 # Convenience functions
-def validate_memory_point(data: Dict[str, Any]) -> tuple[bool, Optional[MemoryPoint], str]:
+def validate_memory_point(data: Dict[str, Any]) -> Tuple[bool, Optional[MemoryPoint], str]:
     """Convenience function to validate memory point data"""
     return ValidationErrorReport.validate_memory_point(data)
 
 
-def validate_session_summary(data: Dict[str, Any]) -> tuple[bool, Optional[SessionSummary], str]:
+def validate_session_summary(data: Dict[str, Any]) -> Tuple[bool, Optional[SessionSummary], str]:
     """Convenience function to validate session summary data"""
     return ValidationErrorReport.validate_session_summary(data)
 
 
-def validate_dialogue_data(data: Dict[str, Any]) -> tuple[bool, Optional[DialogueData], str]:
+def validate_dialogue_data(data: Dict[str, Any]) -> Tuple[bool, Optional[DialogueData], str]:
     """Convenience function to validate dialogue data"""
     return ValidationErrorReport.validate_dialogue_data(data)
 

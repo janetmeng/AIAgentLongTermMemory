@@ -130,7 +130,7 @@ class SummaryProcessor(BaseProcessor):
         # Call LLM, no token limit - Core logic 2
         llm_result = self.safe_llm_generate(
             prompt=prompt,
-            temperature=0.6
+            temperature=1.0
             # Remove max_tokens limit
         )
 
@@ -167,7 +167,7 @@ Please repair it and output ONLY the valid JSON string. Do not add any markdown 
                 # Call LLM to repair JSON
                 repair_result = self.safe_llm_generate(
                     prompt=repair_prompt,
-                    temperature=0.1
+                    temperature=1.0
                 )
                 
 

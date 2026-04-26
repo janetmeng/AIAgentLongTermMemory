@@ -143,7 +143,7 @@ You need to send the first message to the AI assistant. Please follow these step
 
 Please generate the opening message in English ONLY:
 """
-        return self.llm_client.generate(prompt, temperature=0.7)
+        return self.llm_client.generate(prompt, temperature=1.0)
 
     def generate_response(self, ai_message: str, conversation_history: List,
                          current_goal: str, phase, current_time: str = "") -> str:
@@ -223,7 +223,88 @@ Currently in the **{phase.value}** phase. React based on the AI's latest message
 
 Please generate the response in English ONLY:
 """
-        return self.llm_client.generate(prompt, temperature=0.8)
+        return self.llm_client.generate(prompt, temperature=1.0)
+
+
+class EvalAssistantAgent:
+    """
+    Evaluation Assistant Agent — drop-in replacement for AssistantAgent that strips
+    all oracle-only inputs so the evaluated model only sees what a real deployed agent
+    would see: the current conversation history and the current time.
+
+    Oracle inputs intentionally ignored:
+      - memory_context   (benchmark-extracted structured memory points)
+      - current_goal     (hidden session task injected by the oracle)
+      - current_plan_items (oracle-managed semantic schedule)
+      - phase            (system-internal conversation phase metadata)
+      - history_dialogue is included — past session dialogue logs are real agent inputs
+
+    Optional non-oracle memory injection:
+      - Pass `external_memory` (a plain string) to inject the agent's own retrieved
+        memory from whatever external memory system is being evaluated (e.g. mem0).
+        Leave as None for a pure no-memory baseline.
+    """
+
+    def __init__(self, llm_client, history_dialogue=None):
+        self.llm_client = llm_client
+        self.history_dialogue_text = ""
+        if history_dialogue:
+            self.history_dialogue_text = "\n".join([
+                f"[{turn.get('speaker', 'Unknown')}: {turn.get('content', '')}]"
+                for turn in history_dialogue
+            ])
+
+    def generate_response(self, user_message: str, conversation_history: List,
+                         memory_context: str, phase,
+                         current_time: str = "",
+                         current_plan_items=None,
+                         current_goal: str = "",
+                         external_memory: str = None) -> str:
+        """
+        Generate a response using only non-oracle information.
+        `memory_context`, `current_goal`, `current_plan_items`, and `phase` are
+        accepted for signature compatibility but are NOT forwarded to the model.
+        """
+        current_history_text = "\n".join(
+            [f"{turn.speaker}: {turn.content}" for turn in conversation_history]
+        )
+
+        if self.history_dialogue_text:
+            full_history_text = f"{self.history_dialogue_text}\n\n{current_history_text}"
+        else:
+            full_history_text = current_history_text
+
+        memory_section = ""
+        if external_memory and external_memory.strip():
+            memory_section = f"""
+<memory>
+{external_memory}
+</memory>
+"""
+
+        prompt = f"""# Role
+You are a professional AI Assistant helping a user manage their tasks and schedule.
+
+# Context
+<current_time>
+{current_time}
+</current_time>
+{memory_section}
+<conversation_history>
+{full_history_text}
+</conversation_history>
+
+<user_latest_message>
+{user_message}
+</user_latest_message>
+
+# Instructions
+Respond helpfully to the user based on the conversation history and their latest message.
+Be concise, practical, and focused on what the user actually asked.
+
+Please generate the response in English ONLY:
+"""
+        return self.llm_client.generate(prompt, temperature=1.0) ## TODO: change to 0.7
 
 
 class AssistantAgent:
@@ -459,7 +540,7 @@ Please directly generate the response content in English ONLY:
         #print("Assistantprompt：" + prompt)
         #print("------------------------------------")
 
-        return self.llm_client.generate(prompt, temperature=0.5)
+        return self.llm_client.generate(prompt, temperature=1.0)
 
 
 class SemanticScheduleAgent:
@@ -649,7 +730,7 @@ Return a JSON object with `reasoning` and `updated_list`.
         
         # --- Call LLM ---
         try:
-            raw_response = self.llm_client.generate(prompt, temperature=0.0) # Lower temperature to increase strictness
+            raw_response = self.llm_client.generate(prompt, temperature=1.0) # Lower temperature to increase strictness
 
             from utils.error_handler import LLMErrorHandler
             error_handler = LLMErrorHandler(self.llm_client)
@@ -711,7 +792,7 @@ Please return the evaluation results strictly in the following JSON format:
 """
 
         try:
-            response = self.llm_client.generate(prompt, temperature=0.3)
+            response = self.llm_client.generate(prompt, temperature=1.0)
 
             # Extract JSON
             import re
@@ -919,7 +1000,7 @@ Analyze the dialogue transcript above and output JSON.
 
         try:
             # 2. LLM Generation
-            response = self.llm_client.generate(prompt, temperature=0.1)
+            response = self.llm_client.generate(prompt, temperature=1.0)
 
             error_handler = LLMErrorHandler(self.llm_client)
             json_result = error_handler.extract_json_from_response(response)
@@ -943,7 +1024,7 @@ Please fix it and **output only the valid JSON string**. Do not add any markdown
 """
                 try:
                     # Call LLM to repair JSON
-                    repair_response = self.llm_client.generate(repair_prompt, temperature=0.1)
+                    repair_response = self.llm_client.generate(repair_prompt, temperature=1.0)
 
                     # Attempt to extract JSON from repair response
                     repaired_result = error_handler.extract_json_from_response(repair_response)
@@ -1162,7 +1243,7 @@ Analyze <current_memory_points> and output JSON.
 
         try:
             # Low temperature to ensure logical consistency
-            response = self.llm_client.generate(prompt, temperature=0.1)
+            response = self.llm_client.generate(prompt, temperature=1.0)
 
             error_handler = LLMErrorHandler(self.llm_client)
             json_result = error_handler.extract_json_from_response(response)
@@ -1312,7 +1393,7 @@ Please scan every memory. If it meets ANY of the following conditions, you **MUS
 }}
 """
             # Dynamic retrieval requires high precision, use low Temperature
-            batch_selected = self._execute_llm_call(prompt, id_map, temperature=0.1)
+            batch_selected = self._execute_llm_call(prompt, id_map, temperature=1.0)
             all_selected_memories.extend(batch_selected)
 
             if batch_selected:
@@ -1397,7 +1478,7 @@ Please scan every memory. If there is **any dimension of association**, you must
 }}
 """
         # Static retrieval requires associative capability, use slightly higher Temperature
-        return self._execute_llm_call(prompt, id_map, temperature=0.25)
+        return self._execute_llm_call(prompt, id_map, temperature=1.0)
 
     def _execute_llm_call(self, prompt: str, id_map: Dict, temperature: float) -> List[Dict]:
         """Unified execution of LLM calls and parsing."""
@@ -1424,7 +1505,7 @@ Please scan every memory. If there is **any dimension of association**, you must
 class ConversationController:
     """Conversation Controller - Coordinates various agents"""
 
-    def __init__(self, dialogue_client: LLMClient, evaluation_client: LLMClient, memory_client: LLMClient, memory_retrieve_client: LLMClient = None, dedup_client: LLMClient = None, semantic_schedule_client: LLMClient = None, project_attributes_schema: str = ""):
+    def __init__(self, dialogue_client: LLMClient, evaluation_client: LLMClient, memory_client: LLMClient, memory_retrieve_client: LLMClient = None, dedup_client: LLMClient = None, semantic_schedule_client: LLMClient = None, assistant_client: LLMClient = None, project_attributes_schema: str = "", eval_mode: bool = False):
         self.dialogue_client = dialogue_client
         self.evaluation_client = evaluation_client
         self.memory_client = memory_client
@@ -1434,6 +1515,9 @@ class ConversationController:
         self.dedup_client = dedup_client or memory_client
         # If semantic_schedule_client not provided, default to memory_client
         self.semantic_schedule_client = semantic_schedule_client or memory_client
+        # If assistant_client not provided, default to dialogue_client
+        self.assistant_client = assistant_client or dialogue_client
+        self.eval_mode = eval_mode
         self.user_agent = None
         self.assistant_agent = None
         self.goal_evaluator = GoalEvaluatorAgent(evaluation_client)  # Use dedicated evaluation client
@@ -1447,7 +1531,10 @@ class ConversationController:
     def initialize_agents(self, user_profile: Dict[str, Any], full_event_log: List[Dict[str, Any]], current_event_session_summary_list: List[Dict[str, Any]] = None, history_dialogue: List[Dict[str, Any]] = None):
         """Initialize all agents"""
         self.user_agent = UserAgent(self.dialogue_client, user_profile, full_event_log, current_event_session_summary_list, history_dialogue)  # Pass history dialogue
-        self.assistant_agent = AssistantAgent(self.dialogue_client, history_dialogue)  # Pass history dialogue
+        if self.eval_mode:
+            self.assistant_agent = EvalAssistantAgent(self.assistant_client, history_dialogue)
+        else:
+            self.assistant_agent = AssistantAgent(self.assistant_client, history_dialogue)  # Pass history dialogue
         # MemoryManagerAgent is now used for memory extraction after dialogue ends, no need to initialize during conversation
 
     def create_memory_manager(self) -> MemoryManagerAgent:
@@ -1490,7 +1577,7 @@ class ConversationController:
     def conduct_conversation(self, session_summary: str, session_id: str,
                            max_turns: int = 18, session_context: Dict[str, Any] = None, history_dialogue: List[Dict[str, Any]] = None,
                           current_time: str = "", current_plan_items: List[Dict[str, Any]] = None) -> Tuple[List[DialogueTurn], GoalEvaluation, Dict[str, Any], List[Dict[str, Any]]]:
-        """Conduct conversation"""
+        """Conduct conversation : extract memories with memory retrieval agent, """
         conversation_history = []
         current_goal = session_summary
 
@@ -1750,14 +1837,18 @@ class MultiAgentDialogueProcessor(BaseProcessor):
             current_time = data.get("current_time", "")  # Current simulation time
             current_plan_items = data.get("current_plan_items", [])  # Current plan items for semantic schedule processing
 
-            # Initialize conversation controller with semantic schedule support
-            controller = ConversationController(
-                dialogue_client=self.llm_client,
-                evaluation_client=self.llm_client,  # Defaulting to the same client
-                memory_client=self.llm_client,       # Defaulting to the same client
-                dedup_client=self.llm_client,        # Defaulting to the same client
-                semantic_schedule_client=self.llm_client  # [NEW] Defaulting to the same client
-            )
+            # Use pre-configured controller if available (set by main.py with per-role clients),
+            # otherwise fall back to a default controller using the single llm_client.
+            if hasattr(self, 'conversation_controller') and self.conversation_controller is not None:
+                controller = self.conversation_controller
+            else:
+                controller = ConversationController(
+                    dialogue_client=self.llm_client,
+                    evaluation_client=self.llm_client,
+                    memory_client=self.llm_client,
+                    dedup_client=self.llm_client,
+                    semantic_schedule_client=self.llm_client
+                )
             controller.initialize_agents(user_profile, full_event_log, current_event_session_summary_list)
 
             # Conduct conversation with memory context, time, schedule, and plan items

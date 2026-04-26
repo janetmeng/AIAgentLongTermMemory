@@ -176,7 +176,7 @@ class EventProcessor(BaseProcessor):
         # Call LLM
         llm_result = self.safe_llm_generate(
             prompt=prompt,
-            temperature=0.5,
+            temperature=1.0,
             max_tokens=128000  # Increase token limit to ensure complete JSON output
         )
 
