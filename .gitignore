@@ -86,3 +86,5 @@ htmlcov/
 .dmypy.json
 dmypy.jsoneval/results/
 eval/retrieval_result/
+eval/retrieval_result/**/long_context_generation_results.json
+eval/retrieval_result/**/long_context_retrieval_input.json
